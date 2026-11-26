@@ -2,9 +2,10 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace ClinicBooking.Application.DTOs.Auth
+namespace ClinicBooking.Application.DTOs.Auth;
+
+public class LoginRequest
 {
-    internal class LoginRequest
-    {
-    }
+    public string Email { get; set; } = string.Empty;
+    public string Password { get; set; } = string.Empty;
 }
