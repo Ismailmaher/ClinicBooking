@@ -49,8 +49,21 @@ public class AuthService : IAuthService
         };
     }
 
-    public Task<AuthResponse> LoginAsync(LoginRequest request)
+    public async Task<AuthResponse> LoginAsync(LoginRequest request)
     {
-        throw new NotImplementedException();
+        var email = request.Email.Trim().ToLower();
+
+        var user = await _context.Users.FirstOrDefaultAsync(u => u.Email == email);
+
+        if (user is null || !BCrypt.Net.BCrypt.Verify(request.Password, user.PasswordHash))
+            throw new UnauthorizedAccessException("Invalid email or password.");
+
+        return new AuthResponse
+        {
+            Token = _tokenService.GenerateToken(user),
+            Name = user.Name,
+            Email = user.Email,
+            Role = user.Role.ToString()
+        };
     }
 }
